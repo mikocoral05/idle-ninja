@@ -30,7 +30,7 @@ export class IdleNinja {
     onWarning: () => {},
     onLogout: () => {},
     onActive: () => {},
-    storageKey: "idle-ninja-leader",
+    storageKey: 'idle-ninja-leader',
     leaderCheckInterval: 5000,
   };
 
@@ -46,18 +46,12 @@ export class IdleNinja {
       ...(userConfig as Partial<IdleNinjaConfig>),
     };
     this.#parseTimeStrings(userConfig);
-
-    this.#handleActivity = this.#handleActivity.bind(this);
-    this.#handleVisibilityChange = this.#handleVisibilityChange.bind(this);
-    this.#handleStorageChange = this.#handleStorageChange.bind(this);
-    this.#checkIdleTime = this.#checkIdleTime.bind(this);
-    this.#leaderElection = this.#leaderElection.bind(this);
   }
 
   #parseTimeStrings(userConfig: IdleNinjaUserConfig): void {
     const parse = (timeStr: string | number | undefined): number | null => {
-      if (typeof timeStr === "number") return timeStr;
-      if (typeof timeStr !== "string") return null;
+      if (typeof timeStr === 'number') return timeStr;
+      if (typeof timeStr !== 'string') return null;
 
       const match = timeStr.match(/^(\d+)([ms])$/);
       if (!match) {
@@ -65,7 +59,7 @@ export class IdleNinja {
         return null;
       }
       const value = parseInt(match[1], 10);
-      return match[2] === "m" ? value * 60 * 1000 : value * 1000;
+      return match[2] === 'm' ? value * 60 * 1000 : value * 1000;
     };
 
     this.#config.warningAt =
@@ -81,7 +75,7 @@ export class IdleNinja {
       this.#leaderElection,
       this.#config.leaderCheckInterval,
     );
-    console.log("IdleNinja has started watching for inactivity.");
+    console.log('IdleNinja has started watching for inactivity.');
   }
 
   public stop(): void {
@@ -92,10 +86,10 @@ export class IdleNinja {
     if (this.#isLeader) {
       localStorage.removeItem(this.#config.storageKey);
     }
-    console.log("IdleNinja has stopped watching.");
+    console.log('IdleNinja has stopped watching.');
   }
 
-  #leaderElection(): void {
+  #leaderElection = (): void => {
     const now = Date.now();
     const rawData = localStorage.getItem(this.#config.storageKey);
     const leaderData: LeaderData | null = rawData ? JSON.parse(rawData) : null;
@@ -118,16 +112,16 @@ export class IdleNinja {
     );
 
     if (!this.#isLeader) this.#promoteToLeader();
-  }
+  };
 
   #promoteToLeader(): void {
-    console.log("IdleNinja: This tab is now the leader.");
+    console.log('IdleNinja: This tab is now the leader.');
     this.#isLeader = true;
     this.#timerId = setInterval(this.#checkIdleTime, 1000);
   }
 
   #demoteToFollower(): void {
-    console.log("IdleNinja: This tab is now a follower.");
+    console.log('IdleNinja: This tab is now a follower.');
     this.#isLeader = false;
     if (this.#timerId) {
       clearInterval(this.#timerId);
@@ -135,7 +129,7 @@ export class IdleNinja {
     }
   }
 
-  #checkIdleTime(): void {
+  #checkIdleTime = (): void => {
     if (!this.#isLeader || document.hidden) return;
 
     const now = Date.now();
@@ -154,9 +148,9 @@ export class IdleNinja {
       if (!this.#isIdle) this.#isIdle = true;
       this.#config.onWarning(remainingTime);
     }
-  }
+  };
 
-  #handleActivity(): void {
+  #handleActivity = (): void => {
     window.requestAnimationFrame(() => {
       const wasIdle = this.#isIdle;
       this.#lastActivity = Date.now();
@@ -172,18 +166,18 @@ export class IdleNinja {
         localStorage.setItem(this.#config.storageKey, JSON.stringify(data));
       }
     });
-  }
+  };
 
-  #handleStorageChange(event: StorageEvent): void {
+  #handleStorageChange = (event: StorageEvent): void => {
     if (event.key === this.#config.storageKey && event.newValue) {
       const data: LeaderData = JSON.parse(event.newValue);
       if (data.lastActivity && data.lastActivity > this.#lastActivity) {
         this.#lastActivity = data.lastActivity;
       }
     }
-  }
+  };
 
-  #handleVisibilityChange(): void {
+  #handleVisibilityChange = (): void => {
     if (document.hidden) {
       if (this.#isLeader && this.#timerId) {
         clearInterval(this.#timerId);
@@ -195,41 +189,41 @@ export class IdleNinja {
         this.#timerId = setInterval(this.#checkIdleTime, 1000);
       }
     }
-  }
+  };
 
   #setupEventListeners(): void {
     const activityEvents = [
-      "mousemove",
-      "keydown",
-      "mousedown",
-      "touchstart",
-      "scroll",
+      'mousemove',
+      'keydown',
+      'mousedown',
+      'touchstart',
+      'scroll',
     ];
     activityEvents.forEach((event) =>
       window.addEventListener(event, this.#handleActivity as EventListener, {
         passive: true,
       }),
     );
-    document.addEventListener("visibilitychange", this.#handleVisibilityChange);
-    window.addEventListener("storage", this.#handleStorageChange);
+    document.addEventListener('visibilitychange', this.#handleVisibilityChange);
+    window.addEventListener('storage', this.#handleStorageChange);
   }
 
   #removeEventListeners(): void {
     const activityEvents = [
-      "mousemove",
-      "keydown",
-      "mousedown",
-      "touchstart",
-      "scroll",
+      'mousemove',
+      'keydown',
+      'mousedown',
+      'touchstart',
+      'scroll',
     ];
     activityEvents.forEach((event) =>
       window.removeEventListener(event, this.#handleActivity as EventListener),
     );
     document.removeEventListener(
-      "visibilitychange",
+      'visibilitychange',
       this.#handleVisibilityChange,
     );
-    window.removeEventListener("storage", this.#handleStorageChange);
+    window.removeEventListener('storage', this.#handleStorageChange);
   }
 
   public static start(config?: IdleNinjaUserConfig): IdleNinja {

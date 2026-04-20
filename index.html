@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdleNinja E2E Test Bed</title>
+</head>
+
+<body>
+    <h1 id="main-heading">IdleNinja E2E Test</h1>
+    <div id="status">Status: Active</div>
+
+    <script type="module">
+        import { IdleNinja } from './idle-ninja.ts';
+
+        const statusEl = document.getElementById('status');
+        const headingEl = document.getElementById('main-heading');
+
+        const ninja = IdleNinja.start({
+            warningAt: 2000, // 2 seconds
+            logoutAt: 4000,  // 4 seconds
+            onWarning: () => {
+                statusEl.textContent = 'Status: Idle Warning';
+            },
+            onLogout: () => {
+                headingEl.textContent = 'You have been logged out due to inactivity.';
+                statusEl.textContent = 'Status: Logged Out';
+            },
+            onActive: () => {
+                statusEl.textContent = 'Status: Active';
+            }
+        });
+    </script>
+</body>
+
+</html>

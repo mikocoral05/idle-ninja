@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdleNinja Browser Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #f4f7f9;
+        }
+
+        #status {
+            font-weight: bold;
+            color: green;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>IdleNinja Local Browser Test</h1>
+    <p>Move your mouse or press a key to reset the timer.</p>
+    <p>Current Status: <span id="status">Active</span></p>
+
+    <!-- 1. Load the locally built UMD bundle -->
+    <script src="./dist/idle-ninja.browser.min.js"></script>
+
+    <script>
+        const statusEl = document.getElementById('status');
+
+        // 2. Initialize the tracker
+        // Because `IdleNinja` is a named export in TypeScript, Rollup places it 
+        // inside the global `IdleNinja` namespace.
+        IdleNinja.IdleNinja.start({
+            warningAt: '3s',
+            logoutAt: '6s',
+            onWarning: (remainingTime) => {
+                statusEl.textContent = `Warning! Logging out in ${Math.ceil(remainingTime / 1000)}s`;
+                statusEl.style.color = 'orange';
+            },
+            onActive: () => { statusEl.textContent = 'Active'; statusEl.style.color = 'green'; },
+            onLogout: () => { statusEl.textContent = 'Logged Out!'; statusEl.style.color = 'red'; }
+        });
+    </script>
+</body>
+
+</html>
