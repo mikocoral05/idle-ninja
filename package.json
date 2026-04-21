@@ -1,7 +1,7 @@
 {
   "name": "idle-ninja",
   "version": "1.0.0",
-  "description": "",
+  "description": "The High-Performance, Cross-Tab Inactivity Tracker built for modern web applications.",
   "main": "dist/idle-ninja.js",
   "types": "dist/idle-ninja.d.ts",
   "unpkg": "dist/idle-ninja.browser.min.js",
@@ -23,7 +23,11 @@
     "prepare": "husky"
   },
   "keywords": [],
-  "author": "",
+  "author": "mikael_tenshio",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikocoral05/idle-ninja.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
