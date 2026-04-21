@@ -139,7 +139,7 @@ describe('IdleNinja Leader Election', () => {
 });
 
 describe('IdleNinja Callbacks', () => {
-  let originalRAF: any;
+  let originalRAF: typeof window.requestAnimationFrame;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -151,7 +151,7 @@ describe('IdleNinja Callbacks', () => {
       .mockImplementation((cb: FrameRequestCallback) => {
         cb(Date.now());
         return 0;
-      }) as any;
+      }) as unknown as typeof window.requestAnimationFrame;
   });
 
   beforeEach(() => {
@@ -331,7 +331,7 @@ describe('IdleNinja Edge Cases & Coverage', () => {
 
   test('should handle invalid time strings gracefully', () => {
     const consoleWarnSpy = jest.spyOn(console, 'warn');
-    const ninja = new IdleNinja({ warningAt: 'invalid' });
+    new IdleNinja({ warningAt: 'invalid' });
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining('Invalid time format'),
     );
@@ -353,12 +353,12 @@ describe('IdleNinja Edge Cases & Coverage', () => {
   });
 
   test('checkIdleTime returns early if tab is no longer leader', () => {
-    let checkIdleTimeCb: Function | undefined;
+    let checkIdleTimeCb: (() => void) | undefined;
     const originalSetInterval = global.setInterval;
     const setIntervalSpy = jest
       .spyOn(global, 'setInterval')
       .mockImplementation((cb, ms) => {
-        if (ms === 1000) checkIdleTimeCb = cb as Function;
+        if (ms === 1000) checkIdleTimeCb = cb as () => void;
         return originalSetInterval(cb, ms);
       });
 
@@ -421,7 +421,7 @@ describe('IdleNinja Edge Cases & Coverage', () => {
 });
 
 describe('IdleNinja Ultimate Coverage & Missing Branches', () => {
-  let originalRAF: any;
+  let originalRAF: typeof window.requestAnimationFrame;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -432,7 +432,7 @@ describe('IdleNinja Ultimate Coverage & Missing Branches', () => {
       .mockImplementation((cb: FrameRequestCallback) => {
         cb(Date.now());
         return 0;
-      }) as any;
+      }) as unknown as typeof window.requestAnimationFrame;
   });
 
   beforeEach(() => {
