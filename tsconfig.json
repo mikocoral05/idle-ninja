@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*"]
+  "include": ["idle-ninja.ts"]
 }
