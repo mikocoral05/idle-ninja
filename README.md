@@ -28,17 +28,17 @@ npm install idle-ninja
 Initialize `idle-ninja` as early as possible in your application lifecycle.
 
 ```typescript
-import { IdleNinja } from "idle-ninja";
+import { IdleNinja } from 'idle-ninja';
 
 const ninjaTracker = IdleNinja.start({
   // Time formats support 'm' (minutes), 's' (seconds), or raw milliseconds
-  warningAt: "13m",
-  logoutAt: "15m",
+  warningAt: '13m',
+  logoutAt: '15m',
 
   // Extend backend session at most once every 5 minutes during continuous activity
-  keepAliveInterval: "5m",
+  keepAliveInterval: '5m',
   onKeepAlive: () => {
-    fetch("/api/extend-session", { method: "POST" });
+    fetch('/api/extend-session', { method: 'POST' });
   },
 
   // Fires every second during the warning period (13m -> 15m)
@@ -50,13 +50,13 @@ const ninjaTracker = IdleNinja.start({
 
   // Fires when the logout threshold is reached
   onLogout: () => {
-    console.error("Session expired.");
-    window.location.href = "/login?reason=timeout";
+    console.error('Session expired.');
+    window.location.href = '/login?reason=timeout';
   },
 
   // Fires when the user becomes active after previously being idle
   onActive: () => {
-    console.log("Welcome back! User is active again.");
+    console.log('Welcome back! User is active again.');
     // e.g., document.getElementById('warning-modal').style.display = 'none';
   },
 });

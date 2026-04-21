@@ -26,7 +26,7 @@ export default {
       name: 'IdleNinja',
       plugins: [terser()], // Minifies only this specific output
       sourcemap: true,
-    }
+    },
   ],
   plugins: [
     typescript({
