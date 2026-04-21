@@ -18,4 +18,4 @@ IdleNinja.start({
   },
 });
 
-(window as any).idleNinjaLoaded = true;
+(window as Window & { idleNinjaLoaded?: boolean }).idleNinjaLoaded = true;
